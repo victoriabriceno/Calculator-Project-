@@ -40,6 +40,7 @@ MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoi
 
 	//NUMBERS FROM 0-9 BUTTONS
 
+
 	btn7 = new wxButton(this, 100, "7", wxPoint(5, 250), wxSize(100, 50));
 	btn8 = new wxButton(this, 101, "8", wxPoint(105, 250), wxSize(100, 50));
 	btn9 = new wxButton(this, 102, "9", wxPoint(205, 250), wxSize(100, 50));
