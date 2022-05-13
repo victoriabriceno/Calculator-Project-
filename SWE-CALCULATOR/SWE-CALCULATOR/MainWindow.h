@@ -1,6 +1,6 @@
 #pragma once
 #include"wx/wx.h"
-class MainWindow:public wxFrame
+class MainWindow :public wxFrame
 {
 public:
 	MainWindow();
@@ -38,6 +38,13 @@ public:
 	//TEXT BOX WHERE THE NUMBERS ARE GOING TO DISPLAY
 	wxTextCtrl* SCREEN = nullptr;
 	
+	bool decimalPoint = false;
+	bool negativeNumber = false;
+
+public:
+	void OnButtonClick(wxCommandEvent& event);
+	wxDECLARE_EVENT_TABLE();
+
 
 };
 
