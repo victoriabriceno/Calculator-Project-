@@ -96,6 +96,7 @@ MainWindow::~MainWindow() {
 void MainWindow::OnButtonClick(wxCommandEvent& event) {
 
 	CalculatorProcessor* calProcessor = CalculatorProcessor::getInstance();
+	
 	int id = event.GetId();
 	if (id >= 100 && id <= 109) //NUMBERS
 	{
@@ -111,7 +112,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 
 			decimalPoint = false;
 			operators = 1;
-			//SCREEN->SetLabel(SCREEN->GetLabel() + btnSUM->GetLabel());
+			SCREEN->SetLabel(SCREEN->GetLabel() + btnSUM->GetLabel());
 			wxString events = SCREEN->GetLabel();
 			number1 = wxAtof(events);
 			SCREEN->SetLabel(btnSUM->GetLabel());
@@ -170,7 +171,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			wxString eventsSUM = SCREEN->GetLabel();
 			eventsSUM.erase(0, 1);
 			number2 = wxAtof(eventsSUM);
-			result = calProcessor->Add(number1, number2);
+			result = calProcessor->basecommnad[0]->excute(number1, number2);
 			eventsSUM = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventsSUM);
 			break;
@@ -181,7 +182,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			wxString eventSUB = SCREEN->GetLabel();
 			eventSUB.erase(0,1);
 			number2 = wxAtof(eventSUB);
-			result = calProcessor->Sub(number1, number2);
+			result = calProcessor->basecommnad[1]->excute(number1, number2);
 			eventSUB = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventSUB);
 			break;
@@ -190,7 +191,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			wxString eventMULTI = SCREEN->GetLabel();
 			eventMULTI.erase(0, 1);
 			number2 = wxAtof(eventMULTI);
-			result = calProcessor->Multi(number1, number2);
+			result = calProcessor->basecommnad[2]->excute(number1, number2);
 			eventMULTI = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventMULTI);
 			break;
@@ -200,7 +201,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			wxString eventDIV = SCREEN->GetLabel();
 			eventDIV.erase(0, 1);
 			number2 = wxAtof(eventDIV);
-			result = calProcessor->Div(number1, number2);
+			result = calProcessor->basecommnad[3]->excute(number1, number2);
 			eventDIV = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventDIV);
 			break;
@@ -210,7 +211,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			wxString eventMODUL = SCREEN->GetLabel();
 			eventMODUL.erase(0, 3); // We delete "mod" the letter because then we have an error.
 			number2 = wxAtof(eventMODUL);
-			result = calProcessor->Mod(number1, number2);
+			result = calProcessor->basecommnad[4]->excute(number1, number2);
 			eventMODUL = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventMODUL);
 			break;

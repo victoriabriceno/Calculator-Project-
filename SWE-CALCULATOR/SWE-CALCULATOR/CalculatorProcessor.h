@@ -1,5 +1,11 @@
 #pragma once
 #include<bitset>
+#include"AddCommand.h"
+#include"SubCommand.h"
+#include"MultiCommand.h"
+#include"DivCommand.h"
+#include"ModCommand.h"
+#include<vector>
 class CalculatorProcessor
 {
 
@@ -28,4 +34,14 @@ public:
 	float Multi(float number1, float number2) { return number1 * number2; }
 	float Div(float number1, float number2) { return number1 / number2; }
 	int Mod(int number1 , int number2) { return number1 % number2; }
+
+
+
+	std::vector<IBaseCommand*> basecommnad;
+	AddCommand* addCommand;
+	SubCommand* subCommand;
+	MultiCommand* multiCommand;
+	DivCommand* divCommand;
+	ModCommand* modCommand;
+	
 };
