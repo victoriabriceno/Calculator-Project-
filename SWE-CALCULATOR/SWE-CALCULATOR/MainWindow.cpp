@@ -154,6 +154,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			number1 = wxAtof(eventMODUL);
 			SCREEN->SetLabel(btnMODUL->GetLabel()+ " ");
 			break;
+
 		}
 
 		}
