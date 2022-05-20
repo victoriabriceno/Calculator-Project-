@@ -1,7 +1,8 @@
 #include "MainWindow.h"
 #include"ButtonFactory.h"
+#include"CalculatorProcessor.h"
+#include"bitset"
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-
 //EVENTS BUTTONS
 EVT_BUTTON(100, MainWindow::OnButtonClick)
 EVT_BUTTON(101, MainWindow::OnButtonClick)
@@ -28,7 +29,14 @@ EVT_BUTTON(121, MainWindow::OnButtonClick)
 EVT_BUTTON(122, MainWindow::OnButtonClick)
 
 wxEND_EVENT_TABLE()
+
+int operators;
+float result, number1, number2;
+
 MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoint(30, 30), wxSize(420, 495), wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)) {
+
+
+	//CalculatorProcessor* calProcessor = CalculatorProcessor::getInstance();
 
 	ButtonFactory btnFactory;
 	//NOTES
@@ -43,7 +51,7 @@ MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoi
 	//NUMBERS FROM 0-9 BUTTONS
 
 
-	btn7 = btnFactory.ButtonCreation(this, 100, "7", wxPoint(5, 250), wxSize(100, 50),"#FBF8CC");
+	btn7 = btnFactory.ButtonCreation(this, 100, "7", wxPoint(5, 250), wxSize(100, 50), "#FBF8CC");
 	btn8 = btnFactory.ButtonCreation(this, 101, "8", wxPoint(105, 250), wxSize(100, 50), "#FDE4CF");
 	btn9 = btnFactory.ButtonCreation(this, 102, "9", wxPoint(205, 250), wxSize(100, 50), "#FFCFD2");
 	btn4 = btnFactory.ButtonCreation(this, 103, "4", wxPoint(5, 300), wxSize(100, 50), "#A3C4F3");
@@ -56,18 +64,18 @@ MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoi
 
 	//CALCULATOR STUFF
 
-	btnCLEAR = btnFactory.ButtonCreation(this, 110, "AC", wxPoint(5, 195), wxSize(50, 50), "#EAE4E9");
-	btnSUM = btnFactory.ButtonCreation(this, 111, "+", wxPoint(60, 195), wxSize(50, 50), "#FFF1E6");
-	btnSUB = btnFactory.ButtonCreation(this, 112, "-", wxPoint(115, 195), wxSize(50, 50), "#FDE2E4");
-	btnMULTI = btnFactory.ButtonCreation(this, 113, "x", wxPoint(170, 195), wxSize(50, 50), "#FAD2E1");
-	btnDIV = btnFactory.ButtonCreation(this, 114, "÷", wxPoint(225, 195), wxSize(50, 50), "#E2ECE9");
-	btnNEGATIVE = btnFactory.ButtonCreation(this, 115, "+/-", wxPoint(280, 195), wxSize(50, 50), "#BEE1E6");
-	btnMODUL = btnFactory.ButtonCreation(this, 116, "mod", wxPoint(335, 195), wxSize(65, 50), "#F0EFEB");
-	btnBIN = btnFactory.ButtonCreation(this, 117, "BIN", wxPoint(310, 250), wxSize(90, 50), "#DFE7FD");
-	btnHEX = btnFactory.ButtonCreation(this, 118, "HEX", wxPoint(310, 300), wxSize(90, 50), "#CDDAFD");
-	btnDEC = btnFactory.ButtonCreation(this, 119, "DEC", wxPoint(310, 350), wxSize(90, 50), "#ffb5a7");
-	btnEQUAL = btnFactory.ButtonCreation(this, 120, "=", wxPoint(310, 400), wxSize(90, 50), "#fcd5ce");
-	btnDOT = btnFactory.ButtonCreation(this, 121, ".", wxPoint(205, 400), wxSize(100, 50), "#FFD6A5");
+	btnSUM = btnFactory.ButtonCreation(this, 110, "+", wxPoint(60, 195), wxSize(50, 50), "#FFF1E6");
+	btnSUB = btnFactory.ButtonCreation(this, 111, "-", wxPoint(115, 195), wxSize(50, 50), "#FDE2E4");
+	btnMULTI = btnFactory.ButtonCreation(this, 112, "x", wxPoint(170, 195), wxSize(50, 50), "#FAD2E1");
+	btnDIV = btnFactory.ButtonCreation(this, 113, "÷", wxPoint(225, 195), wxSize(50, 50), "#E2ECE9");
+	btnMODUL = btnFactory.ButtonCreation(this, 114, "mod", wxPoint(335, 195), wxSize(65, 50), "#F0EFEB");
+	btnBIN = btnFactory.ButtonCreation(this, 115, "BIN", wxPoint(310, 250), wxSize(90, 50), "#DFE7FD");
+	btnHEX = btnFactory.ButtonCreation(this, 116, "HEX", wxPoint(310, 300), wxSize(90, 50), "#CDDAFD");
+	btnDEC = btnFactory.ButtonCreation(this, 117, "DEC", wxPoint(310, 350), wxSize(90, 50), "#ffb5a7");
+	btnEQUAL = btnFactory.ButtonCreation(this, 118, "=", wxPoint(310, 400), wxSize(90, 50), "#fcd5ce");
+	btnDOT = btnFactory.ButtonCreation(this, 119, ".", wxPoint(205, 400), wxSize(100, 50), "#FFD6A5");
+	btnNEGATIVE = btnFactory.ButtonCreation(this, 120, "+/-", wxPoint(280, 195), wxSize(50, 50), "#BEE1E6");
+	btnCLEAR = btnFactory.ButtonCreation(this, 121, "AC", wxPoint(5, 195), wxSize(50, 50), "#EAE4E9");
 
 
 	//SCREEN
@@ -83,24 +91,139 @@ MainWindow::~MainWindow() {
 
 }
 
+
+
 void MainWindow::OnButtonClick(wxCommandEvent& event) {
 
+	CalculatorProcessor* calProcessor = CalculatorProcessor::getInstance();
 	int id = event.GetId();
 	if (id >= 100 && id <= 109) //NUMBERS
 	{
 		wxButton* btn = dynamic_cast<wxButton*> (event.GetEventObject());
 		SCREEN->SetLabel(SCREEN->GetLabel() + btn->GetLabel());
+	}
+	else if (id >= 110 && id <= 114) {
 
+		//FOR THE MATH 
+		switch (id)
+		{
+		case 110: {
 
+			decimalPoint = false;
+			operators = 1;
+			//SCREEN->SetLabel(SCREEN->GetLabel() + btnSUM->GetLabel());
+			wxString events = SCREEN->GetLabel();
+			number1 = wxAtof(events);
+			SCREEN->SetLabel(btnSUM->GetLabel());
+			break;
+
+		}
+		case 111: {
+			decimalPoint = false;
+			operators = 2;
+			SCREEN->SetLabel(SCREEN->GetLabel() + btnSUB->GetLabel());
+			wxString eventSUB = SCREEN->GetLabel();
+			number1 = wxAtof(eventSUB);
+			SCREEN->SetLabel(btnSUB->GetLabel());
+			break;
+		}
+		case 112: {
+			decimalPoint = false;
+			operators = 3;
+			SCREEN->SetLabel(SCREEN->GetLabel() + btnMULTI->GetLabel());
+			wxString eventMULTI = SCREEN->GetLabel();
+			number1 = wxAtof(eventMULTI);
+			SCREEN->SetLabel(btnMULTI->GetLabel());
+			break;
+		}
+		case 113: {
+			decimalPoint = false;
+			operators = 4;
+			SCREEN->SetLabel(SCREEN->GetLabel() + btnDIV->GetLabel());
+			wxString eventDIV = SCREEN->GetLabel();
+			number1 = wxAtof(eventDIV);
+			SCREEN->SetLabel(btnDIV->GetLabel());
+			break;
+		}
+		case 114: {
+
+			decimalPoint = false;
+			operators = 5;
+			SCREEN->SetLabel(SCREEN->GetLabel() + btnMODUL->GetLabel());
+			wxString eventMODUL = SCREEN->GetLabel();
+			number1 = wxAtof(eventMODUL);
+			SCREEN->SetLabel(btnMODUL->GetLabel()+ " ");
+			break;
+		}
+
+		}
 
 	}
-	else if (id >= 111 && id <= 114) //sum,sub,multi and div
+	if (id == 118)
 	{
-		decimalPoint = false;
-		wxButton* btn = dynamic_cast<wxButton*> (event.GetEventObject());
-		SCREEN->SetLabel(SCREEN->GetLabel() + btn->GetLabel());
+		//FOR THE RESULT WHEN THE USER PRESS =	
+		switch (operators)
+		{
+		case 1: {
+
+			wxString eventsSUM = SCREEN->GetLabel();
+			eventsSUM.erase(0, 1);
+			number2 = wxAtof(eventsSUM);
+			result = calProcessor->Add(number1, number2);
+			eventsSUM = wxString::Format(wxT("%g"), result);
+			SCREEN->SetLabel(eventsSUM);
+			break;
+
+		}
+		case 2: {
+
+			wxString eventSUB = SCREEN->GetLabel();
+			eventSUB.erase(0,1);
+			number2 = wxAtof(eventSUB);
+			result = calProcessor->Sub(number1, number2);
+			eventSUB = wxString::Format(wxT("%g"), result);
+			SCREEN->SetLabel(eventSUB);
+			break;
+		}
+		case 3: {
+			wxString eventMULTI = SCREEN->GetLabel();
+			eventMULTI.erase(0, 1);
+			number2 = wxAtof(eventMULTI);
+			result = calProcessor->Multi(number1, number2);
+			eventMULTI = wxString::Format(wxT("%g"), result);
+			SCREEN->SetLabel(eventMULTI);
+			break;
+
+		}
+		case 4: {
+			wxString eventDIV = SCREEN->GetLabel();
+			eventDIV.erase(0, 1);
+			number2 = wxAtof(eventDIV);
+			result = calProcessor->Div(number1, number2);
+			eventDIV = wxString::Format(wxT("%g"), result);
+			SCREEN->SetLabel(eventDIV);
+			break;
+		}
+		case 5: {
+
+			wxString eventMODUL = SCREEN->GetLabel();
+			eventMODUL.erase(0, 3); // We delete "mod" the letter because then we have an error.
+			number2 = wxAtof(eventMODUL);
+			result = calProcessor->Mod(number1, number2);
+			eventMODUL = wxString::Format(wxT("%g"), result);
+			SCREEN->SetLabel(eventMODUL);
+			break;
+		}
+
+
+		}
+
 	}
-	else if (id == 121) //DOT
+	else if (id == 121) //CLEAR
+	{
+		SCREEN->SetLabel("");
+	}
+	else if (id == 119) //DOT
 	{
 		if (!decimalPoint)
 		{
@@ -108,16 +231,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			decimalPoint = true;
 		}
 	}
-	else if (id == 110) //CLEAR
-	{
-		SCREEN->SetLabel("");
-	}
-	else if (id == 116) //MOD 
-	{
-		SCREEN->SetLabel(SCREEN->GetLabel() + btnMODUL->GetLabel());
-
-	}
-	else if (id == 115)
+	else if (id == 120)
 	{
 		if (!negativeNumber)
 		{
@@ -132,7 +246,6 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			negativeNumber = false;
 		}
 	}
-
-
 	event.Skip();
+
 }
