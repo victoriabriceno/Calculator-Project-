@@ -185,6 +185,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			result = calProcessor->basecommnad[1]->excute(number1, number2);
 			eventSUB = wxString::Format(wxT("%g"), result);
 			SCREEN->SetLabel(eventSUB);
+
 			break;
 		}
 		case 3: {
