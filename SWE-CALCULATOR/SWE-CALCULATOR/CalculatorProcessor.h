@@ -6,6 +6,7 @@
 #include"DivCommand.h"
 #include"ModCommand.h"
 #include<vector>
+#include <iostream>
 class CalculatorProcessor
 {
 
@@ -34,8 +35,9 @@ public:
 	float Multi(float number1, float number2) { return number1 * number2; }
 	float Div(float number1, float number2) { return number1 / number2; }
 	int Mod(int number1 , int number2) { return number1 % number2; }
-
-
+	std::string decimalToBinary(int n);
+	std::string decToHex(int n);
+	std::string decimal(int n);
 
 	std::vector<IBaseCommand*> basecommnad;
 	AddCommand* addCommand;
@@ -43,5 +45,7 @@ public:
 	MultiCommand* multiCommand;
 	DivCommand* divCommand;
 	ModCommand* modCommand;
+
+	
 	
 };

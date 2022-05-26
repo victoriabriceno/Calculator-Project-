@@ -2,6 +2,7 @@
 #include"ButtonFactory.h"
 #include"CalculatorProcessor.h"
 #include"bitset"
+#include <sstream>
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 //EVENTS BUTTONS
 EVT_BUTTON(100, MainWindow::OnButtonClick)
@@ -30,7 +31,7 @@ EVT_BUTTON(122, MainWindow::OnButtonClick)
 
 wxEND_EVENT_TABLE()
 
-int operators;
+int operators, numberBIN;
 float result, number1, number2;
 
 MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoint(30, 30), wxSize(420, 495), wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)) {
@@ -96,14 +97,14 @@ MainWindow::~MainWindow() {
 void MainWindow::OnButtonClick(wxCommandEvent& event) {
 
 	CalculatorProcessor* calProcessor = CalculatorProcessor::getInstance();
-	
+
 	int id = event.GetId();
 	if (id >= 100 && id <= 109) //NUMBERS
 	{
 		wxButton* btn = dynamic_cast<wxButton*> (event.GetEventObject());
 		SCREEN->SetLabel(SCREEN->GetLabel() + btn->GetLabel());
 	}
-	else if (id >= 110 && id <= 114) {
+	else if (id >= 110 && id <= 117) {
 
 		//FOR THE MATH 
 		switch (id)
@@ -147,17 +148,42 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			break;
 		}
 		case 114: {
-
 			decimalPoint = false;
 			operators = 5;
 			SCREEN->SetLabel(SCREEN->GetLabel() + btnMODUL->GetLabel());
 			wxString eventMODUL = SCREEN->GetLabel();
 			number1 = wxAtof(eventMODUL);
-			SCREEN->SetLabel(btnMODUL->GetLabel()+ " ");
+			SCREEN->SetLabel(btnMODUL->GetLabel() + " ");
 			break;
 
 		}
+		case 115: {
 
+			result = wxAtof(SCREEN->GetLabel());
+			std::string string;
+			string = calProcessor->decimalToBinary(result);
+			SCREEN->SetLabel(string);
+
+
+			break;
+
+		}
+		case 116: {
+			decimalPoint = false;
+			result = wxAtof(SCREEN->GetLabel());
+			std::string result1 = calProcessor->decToHex(result);
+			SCREEN->SetLabel(result1);
+			break;
+		}
+
+		case 117: {
+			decimalPoint = false;
+			result = wxAtof(SCREEN->GetLabel());
+			std::string result1 = calProcessor->decimal(result);
+			SCREEN->SetLabel(SCREEN->GetLabel());
+			break;
+
+		}
 		}
 
 	}
@@ -180,7 +206,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 		case 2: {
 
 			wxString eventSUB = SCREEN->GetLabel();
-			eventSUB.erase(0,1);
+			eventSUB.erase(0, 1);
 			number2 = wxAtof(eventSUB);
 			result = calProcessor->basecommnad[1]->excute(number1, number2);
 			eventSUB = wxString::Format(wxT("%g"), result);
@@ -250,5 +276,4 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 		}
 	}
 	event.Skip();
-
 }
