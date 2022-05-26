@@ -183,6 +183,7 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 			SCREEN->SetLabel(SCREEN->GetLabel());
 			break;
 
+
 		}
 		}
 
