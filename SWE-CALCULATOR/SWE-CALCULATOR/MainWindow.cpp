@@ -78,6 +78,7 @@ MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoi
 	btnCLEAR = btnFactory.ButtonCreation(this, 121, "AC", wxPoint(5, 195), wxSize(50, 50), "#EAE4E9");
 
 
+
 	//SCREEN
 	SCREEN = new wxTextCtrl(this, wxID_ANY, wxString(""), wxPoint(5, 100), wxSize(395, 80), wxTE_READONLY | wxTE_RIGHT);
 
