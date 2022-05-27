@@ -37,7 +37,8 @@ public:
 	int Mod(int number1 , int number2) { return number1 % number2; }
 	std::string decimalToBinary(int n);
 	std::string decToHex(int n);
-	std::string decimal(int n);
+	int BinaryToDec(std::string n);
+	int HexToDec(std::string n);
 
 	std::vector<IBaseCommand*> basecommnad;
 	AddCommand* addCommand;

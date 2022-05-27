@@ -31,8 +31,7 @@ EVT_BUTTON(122, MainWindow::OnButtonClick)
 
 wxEND_EVENT_TABLE()
 
-int operators, numberBIN;
-float result, number1, number2;
+
 
 MainWindow::MainWindow() :wxFrame(nullptr, wxID_ANY, "Briceno Calculator", wxPoint(30, 30), wxSize(420, 495), wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)) {
 
@@ -101,88 +100,147 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 	int id = event.GetId();
 	if (id >= 100 && id <= 109) //NUMBERS
 	{
-		wxButton* btn = dynamic_cast<wxButton*> (event.GetEventObject());
-		SCREEN->SetLabel(SCREEN->GetLabel() + btn->GetLabel());
+		if (isDoingMath)
+		{
+			wxButton* btn = dynamic_cast<wxButton*> (event.GetEventObject());
+			SCREEN->SetLabel(SCREEN->GetLabel() + btn->GetLabel());
+
+		}
 	}
 	else if (id >= 110 && id <= 117) {
 
 		//FOR THE MATH 
 		switch (id)
 		{
-		case 110: {
+		case 110: {  //+
 
-			decimalPoint = false;
-			operators = 1;
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnSUM->GetLabel());
-			wxString events = SCREEN->GetLabel();
-			number1 = wxAtof(events);
-			SCREEN->SetLabel(btnSUM->GetLabel());
+			if (isDoingMath)
+			{
+				decimalPoint = false;
+				operators = 1;
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnSUM->GetLabel());
+				wxString events = SCREEN->GetLabel();
+				number1 = wxAtof(events);
+				SCREEN->SetLabel(btnSUM->GetLabel());
+
+			}
 			break;
 
 		}
-		case 111: {
-			decimalPoint = false;
-			operators = 2;
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnSUB->GetLabel());
-			wxString eventSUB = SCREEN->GetLabel();
-			number1 = wxAtof(eventSUB);
-			SCREEN->SetLabel(btnSUB->GetLabel());
+		case 111: { //-
+			if (isDoingMath)
+			{
+
+				decimalPoint = false;
+				operators = 2;
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnSUB->GetLabel());
+				wxString eventSUB = SCREEN->GetLabel();
+				number1 = wxAtof(eventSUB);
+				SCREEN->SetLabel(btnSUB->GetLabel());
+			}
 			break;
 		}
-		case 112: {
-			decimalPoint = false;
-			operators = 3;
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnMULTI->GetLabel());
-			wxString eventMULTI = SCREEN->GetLabel();
-			number1 = wxAtof(eventMULTI);
-			SCREEN->SetLabel(btnMULTI->GetLabel());
+		case 112: { // *
+			if (isDoingMath)
+			{
+
+				decimalPoint = false;
+				operators = 3;
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnMULTI->GetLabel());
+				wxString eventMULTI = SCREEN->GetLabel();
+				number1 = wxAtof(eventMULTI);
+				SCREEN->SetLabel(btnMULTI->GetLabel());
+			}
 			break;
 		}
-		case 113: {
-			decimalPoint = false;
-			operators = 4;
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnDIV->GetLabel());
-			wxString eventDIV = SCREEN->GetLabel();
-			number1 = wxAtof(eventDIV);
-			SCREEN->SetLabel(btnDIV->GetLabel());
+		case 113: { // div
+			if (isDoingMath)
+			{
+
+				decimalPoint = false;
+				operators = 4;
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnDIV->GetLabel());
+				wxString eventDIV = SCREEN->GetLabel();
+				number1 = wxAtof(eventDIV);
+				SCREEN->SetLabel(btnDIV->GetLabel());
+			}
 			break;
 		}
-		case 114: {
-			decimalPoint = false;
-			operators = 5;
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnMODUL->GetLabel());
-			wxString eventMODUL = SCREEN->GetLabel();
-			number1 = wxAtof(eventMODUL);
-			SCREEN->SetLabel(btnMODUL->GetLabel() + " ");
-			break;
+		case 114: { // MOD
+			if (isDoingMath)
+			{
 
-		}
-		case 115: {
-
-			result = wxAtof(SCREEN->GetLabel());
-			std::string string;
-			string = calProcessor->decimalToBinary(result);
-			SCREEN->SetLabel(string);
-
-
+				decimalPoint = false;
+				operators = 5;
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnMODUL->GetLabel());
+				wxString eventMODUL = SCREEN->GetLabel();
+				number1 = wxAtof(eventMODUL);
+				SCREEN->SetLabel(btnMODUL->GetLabel() + " ");
+			}
 			break;
 
 		}
-		case 116: {
-			decimalPoint = false;
-			result = wxAtof(SCREEN->GetLabel());
-			std::string result1 = calProcessor->decToHex(result);
-			SCREEN->SetLabel(result1);
+		case 115: { //BIN
+
+			decimalPoint = true;
+			if (isDoingMath)
+			{
+
+				if (!isBin && !isHex)
+				{
+					result = wxAtof(SCREEN->GetLabel());
+					std::string string;
+					string = calProcessor->decimalToBinary(result);
+					SCREEN->SetLabel(string);
+					isBin = true;
+					isDoingMath = false;
+
+				}
+			}
+
+			break;
+
+		}
+		case 116: { //HEX
+
+			decimalPoint = true;
+			if (isDoingMath)
+			{
+				if (!isHex && !isBin)
+				{
+					result = wxAtof(SCREEN->GetLabel());
+					std::string result1 = calProcessor->decToHex(result);
+					SCREEN->SetLabel(result1);
+					isHex = true;
+					isDoingMath = false;
+				}
+
+			}
+
 			break;
 		}
 
-		case 117: {
-			decimalPoint = false;
-			result = wxAtof(SCREEN->GetLabel());
-			std::string result1 = calProcessor->decimal(result);
-			SCREEN->SetLabel(SCREEN->GetLabel());
-			break;
+		case 117: { //DEC
 
+			if (isBin)
+			{
+				int result1 = calProcessor->BinaryToDec((std::string)(SCREEN->GetLabel()));
+				SCREEN->SetLabel(std::to_string(result1));
+				decimalPoint = false;
+				isBin = false;
+				isDoingMath = true;
+
+
+			}
+			if (isHex)
+			{
+				std::string hextoDec = (std::string)SCREEN->GetLabel();
+				SCREEN->SetLabel(std::to_string(calProcessor->HexToDec(hextoDec)));
+				isHex = false;
+				decimalPoint = false;
+				isDoingMath = true;
+			}
+			break;
 
 		}
 		}
@@ -251,29 +309,46 @@ void MainWindow::OnButtonClick(wxCommandEvent& event) {
 	}
 	else if (id == 121) //CLEAR
 	{
+		decimalPoint = false;
+		isHex = false;
+		isBin = false;
+		negativeNumber = false;
+		isDoingMath = true;
 		SCREEN->SetLabel("");
+
 	}
+
 	else if (id == 119) //DOT
 	{
-		if (!decimalPoint)
+		if (isDoingMath)
 		{
-			SCREEN->SetLabel(SCREEN->GetLabel() + btnDOT->GetLabel());
-			decimalPoint = true;
+
+			if (!decimalPoint)
+			{
+				SCREEN->SetLabel(SCREEN->GetLabel() + btnDOT->GetLabel());
+				decimalPoint = true;
+			}
 		}
 	}
 	else if (id == 120)
 	{
-		if (!negativeNumber)
+		if (isDoingMath)
 		{
-			SCREEN->SetLabel("-" + SCREEN->GetLabel());
-			negativeNumber = true;
-		}
-		else
-		{
-			wxString erasing = SCREEN->GetLabel();
-			erasing.erase(0, 1);
-			SCREEN->SetLabel(erasing);
-			negativeNumber = false;
+
+			if (!negativeNumber)
+			{
+				SCREEN->SetLabel("-" + SCREEN->GetLabel());
+				negativeNumber = true;
+
+			}
+			else
+			{
+				wxString erasing = SCREEN->GetLabel();
+				erasing.erase(0, 1);
+				SCREEN->SetLabel(erasing);
+				negativeNumber = false;
+
+			}
 		}
 	}
 	event.Skip();

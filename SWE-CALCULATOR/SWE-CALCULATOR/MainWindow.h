@@ -40,7 +40,11 @@ public:
 	
 	bool decimalPoint = false;
 	bool negativeNumber = false;
-
+	int operators, numberBIN;
+	float result, number1, number2;
+	bool isBin = false;
+	bool isHex = false;
+	bool isDoingMath = true;
 public:
 	void OnButtonClick(wxCommandEvent& event);
 	wxDECLARE_EVENT_TABLE();

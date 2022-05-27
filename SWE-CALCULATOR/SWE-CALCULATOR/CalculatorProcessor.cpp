@@ -24,7 +24,7 @@ CalculatorProcessor* ::CalculatorProcessor::_calculatorProcessor = nullptr;
 
 std::string CalculatorProcessor::decimalToBinary(int n) {
 
-	
+
 	//converting it to string.
 	std::string binary = std::bitset<64>(n).to_string();
 
@@ -46,13 +46,20 @@ std::string CalculatorProcessor::decToHex(int n) {
 	return result1;
 
 }
-std::string CalculatorProcessor:: decimal(int n) {
+int CalculatorProcessor::BinaryToDec(std::string n) {
 
-	std::ostringstream ss;
-	ss << std::dec << n;
-	std::string result1 = ss.str();
+	int binTodec = 0;
+	binTodec = stoi(n, 0, 2);
 
-	return result1;
+	return binTodec;
+}
+int CalculatorProcessor::HexToDec(std::string n) {
 
+
+	int hex;
+	std::stringstream hexTodec;
+	hexTodec << std::hex << n;
+	hexTodec >> hex;
+	return hex;
 
 }
